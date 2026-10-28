@@ -1,0 +1,37 @@
+# Un solo comando: docker compose up --build
+services:
+  db:
+    image: postgres:17-alpine
+    container_name: ecorecicla-db
+    environment:
+      POSTGRES_DB: ecorecicla
+      POSTGRES_USER: eco
+      POSTGRES_PASSWORD: eco2026
+      TZ: America/Lima
+      PGTZ: America/Lima
+    ports:
+      - "5433:5432"
+    volumes:
+      - eco-datos:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U eco -d ecorecicla"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+  api:
+    build: .
+    container_name: ecorecicla-api
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_URL: jdbc:postgresql://db:5432/ecorecicla
+      DB_USER: eco
+      DB_PASSWORD: eco2026
+      TZ: America/Lima
+    ports:
+      - "8080:8080"
+
+volumes:
+  eco-datos:
