@@ -58,11 +58,11 @@ Todas las rutas, salvo el login, exigen `Authorization: Bearer <token>`.
 | Crear punto | `POST /api/v1/puntos` | PUNTO_GESTIONAR | 201 | 400, 401, 403 |
 | Pesajes de un punto | `GET /api/v1/puntos/{id}/pesajes?pagina=0&tamanio=20` | PESAJE_LEER | 200 página, del más reciente al más antiguo | 401, 403, 404 |
 | Ver pesaje | `GET /api/v1/pesajes/{id}` | PESAJE_LEER | 200 | 401, 403, 404 |
-| Registrar pesaje | `POST /api/v1/pesajes` `{rutaId, puntoId, material, pesoBruto, tara, observacion}` | PESAJE_CREAR | **201** con id definitivo y `pesoNeto` | 400 (RN-03), 401, 403, 404, 409 (RN-01) |
-| Corregir pesaje | `PUT /api/v1/pesajes/{id}` `{material, pesoBruto, tara, observacion}` | PESAJE_EDITAR | 200 | 400, 401, 403 (RN-02), 404, 409 (RN-01) |
+| Registrar pesaje | `POST /api/v1/pesajes` `{rutaId, puntoId, material, pesoBruto, tara, observacion, humedadEstimada}` | PESAJE_CREAR | **201** con id definitivo y `pesoNeto` | 400 (RN-03), 401, 403, 404, 409 (RN-01) |
+| Corregir pesaje | `PUT /api/v1/pesajes/{id}` `{material, pesoBruto, tara, observacion, humedadEstimada}` | PESAJE_EDITAR | 200 | 400, 401, 403 (RN-02), 404, 409 (RN-01) |
 | Anular pesaje | `DELETE /api/v1/pesajes/{id}?motivo=...` | PESAJE_ANULAR | **204** (anulación lógica: el registro queda marcado) | 400, 401, 403, 404, 409 |
 
-El cliente nunca envía el peso neto: lo calcula el servicio. Cualquier error no previsto responde 500 sin detalles internos.
+El cliente nunca envía el peso neto: lo calcula el servicio. **SC-C:** `humedadEstimada` (porcentaje, obligatorio, 0 a 100) viaja en registro y corrección y vuelve en cada pesaje; la migración `V4__humedad_estimada.sql` agrega la columna y completa los datos semilla. Cualquier error no previsto responde 500 sin detalles internos.
 
 **Paginación** (todos los listados): `{"contenido": [...], "pagina": 0, "tamanio": 20, "totalElementos": 37, "totalPaginas": 2, "ultima": false}`
 

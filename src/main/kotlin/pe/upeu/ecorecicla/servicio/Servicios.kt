@@ -125,7 +125,8 @@ class PesajeService(
             fechaHora = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS),
             material = p.material!!.trim().uppercase(),
             pesoBruto = bruto, tara = tara, pesoNeto = neto,
-            observacion = p.observacion?.trim()?.ifBlank { null }
+            observacion = p.observacion?.trim()?.ifBlank { null },
+            humedadEstimada = porcentaje(p.humedadEstimada!!)
         )
         return aRespuesta(pesajes.save(nuevo))
     }
@@ -146,6 +147,7 @@ class PesajeService(
         pesaje.tara = tara
         pesaje.pesoNeto = neto
         pesaje.observacion = p.observacion?.trim()?.ifBlank { null }
+        pesaje.humedadEstimada = porcentaje(p.humedadEstimada!!)
         return aRespuesta(pesaje)
     }
 
@@ -175,10 +177,12 @@ class PesajeService(
         return Triple(b, t, neto)
     }
 
+    private fun porcentaje(valor: Double) = BigDecimal.valueOf(valor).setScale(2, RoundingMode.HALF_UP)
+
     private fun aRespuesta(p: Pesaje) = PesajeResponse(
         p.id!!, p.ruta.id!!, p.punto.id!!, p.fechaHora.toString(), p.material,
         p.pesoBruto.toDouble(), p.tara.toDouble(), p.pesoNeto.toDouble(),
-        p.usuario.username, p.observacion, p.anulado, p.motivoAnulacion
+        p.usuario.username, p.observacion, p.humedadEstimada.toDouble(), p.anulado, p.motivoAnulacion
     )
 }
 

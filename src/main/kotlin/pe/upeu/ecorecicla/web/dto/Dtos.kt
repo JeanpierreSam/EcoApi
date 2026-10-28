@@ -1,5 +1,6 @@
 package pe.upeu.ecorecicla.web.dto
 
+import jakarta.validation.constraints.DecimalMax
 import jakarta.validation.constraints.DecimalMin
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
@@ -108,7 +109,10 @@ data class PesajeRequest(
     @field:DecimalMin(value = "0.01", message = "El peso bruto debe ser mayor que cero") val pesoBruto: Double?,
     @field:NotNull(message = "La tara es obligatoria")
     @field:DecimalMin(value = "0.0", message = "La tara no puede ser negativa") val tara: Double?,
-    @field:Size(max = 250, message = "La observacion admite 250 caracteres") val observacion: String?
+    @field:Size(max = 250, message = "La observacion admite 250 caracteres") val observacion: String?,
+    @field:NotNull(message = "La humedad estimada es obligatoria")
+    @field:DecimalMin(value = "0.0", message = "La humedad no puede ser negativa")
+    @field:DecimalMax(value = "100.0", message = "La humedad no puede superar el 100 %") val humedadEstimada: Double?
 )
 
 data class CorreccionPesajeRequest(
@@ -117,7 +121,10 @@ data class CorreccionPesajeRequest(
     @field:DecimalMin(value = "0.01", message = "El peso bruto debe ser mayor que cero") val pesoBruto: Double?,
     @field:NotNull(message = "La tara es obligatoria")
     @field:DecimalMin(value = "0.0", message = "La tara no puede ser negativa") val tara: Double?,
-    @field:Size(max = 250, message = "La observacion admite 250 caracteres") val observacion: String?
+    @field:Size(max = 250, message = "La observacion admite 250 caracteres") val observacion: String?,
+    @field:NotNull(message = "La humedad estimada es obligatoria")
+    @field:DecimalMin(value = "0.0", message = "La humedad no puede ser negativa")
+    @field:DecimalMax(value = "100.0", message = "La humedad no puede superar el 100 %") val humedadEstimada: Double?
 )
 
 data class PesajeResponse(
@@ -131,6 +138,7 @@ data class PesajeResponse(
     val pesoNeto: Double,
     val operario: String,
     val observacion: String?,
+    val humedadEstimada: Double,
     val anulado: Boolean,
     val motivoAnulacion: String?
 )

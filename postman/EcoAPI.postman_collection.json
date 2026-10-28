@@ -509,7 +509,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\"rutaId\": 2, \"puntoId\": 10, \"material\": \"PLASTICO\", \"pesoBruto\": 40, \"tara\": 3.5, \"observacion\": \"Postman\"}"
+              "raw": "{\"rutaId\": 2, \"puntoId\": 10, \"material\": \"PLASTICO\", \"pesoBruto\": 40, \"tara\": 3.5, \"observacion\": \"Postman\", \"humedadEstimada\": 5}"
             }
           },
           "event": [
@@ -590,7 +590,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\"rutaId\": 2, \"puntoId\": 10, \"material\": \"CARTON\", \"pesoBruto\": 5, \"tara\": 8}"
+              "raw": "{\"rutaId\": 2, \"puntoId\": 10, \"material\": \"CARTON\", \"pesoBruto\": 5, \"tara\": 8, \"humedadEstimada\": 5}"
             }
           },
           "event": [
@@ -630,7 +630,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\"rutaId\": 1, \"puntoId\": 1, \"material\": \"CARTON\", \"pesoBruto\": 50, \"tara\": 5}"
+              "raw": "{\"rutaId\": 1, \"puntoId\": 1, \"material\": \"CARTON\", \"pesoBruto\": 50, \"tara\": 5, \"humedadEstimada\": 5}"
             }
           },
           "event": [
@@ -671,7 +671,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\"material\": \"PLASTICO\", \"pesoBruto\": 42, \"tara\": 3.5, \"observacion\": \"\"}"
+              "raw": "{\"material\": \"PLASTICO\", \"pesoBruto\": 42, \"tara\": 3.5, \"observacion\": \"\", \"humedadEstimada\": 5}"
             }
           },
           "event": [
@@ -712,7 +712,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\"material\": \"VIDRIO\", \"pesoBruto\": 61, \"tara\": 18, \"observacion\": \"\"}"
+              "raw": "{\"material\": \"VIDRIO\", \"pesoBruto\": 61, \"tara\": 18, \"observacion\": \"\", \"humedadEstimada\": 5}"
             }
           },
           "event": [
@@ -795,7 +795,7 @@
             },
             "body": {
               "mode": "raw",
-              "raw": "{\"rutaId\": 2, \"puntoId\": 10, \"material\": \"CARTON\", \"pesoBruto\": 5, \"tara\": 1}"
+              "raw": "{\"rutaId\": 2, \"puntoId\": 10, \"material\": \"CARTON\", \"pesoBruto\": 5, \"tara\": 1, \"humedadEstimada\": 5}"
             }
           },
           "event": [
@@ -972,6 +972,52 @@
                 "type": "text/javascript",
                 "exec": [
                   "pm.test('409', () => pm.response.to.have.status(409));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "6. SC-C Humedad estimada",
+      "item": [
+        {
+          "name": "Humedad fuera de rango (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokOperario}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"rutaId\": 2, \"puntoId\": 10, \"material\": \"PLASTICO\", \"pesoBruto\": 40, \"tara\": 3.5, \"humedadEstimada\": 120}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/pesajes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pesajes"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('400', () => pm.response.to.have.status(400));",
+                  "pm.test('campo', () => pm.expect(pm.response.json().validationErrors).to.have.property('humedadEstimada'));"
                 ]
               }
             }
