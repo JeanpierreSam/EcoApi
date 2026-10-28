@@ -79,6 +79,8 @@ class Pesaje(
     var tara: BigDecimal = BigDecimal.ZERO,
     var pesoNeto: BigDecimal = BigDecimal.ZERO,
     var observacion: String? = null,
+    /** SC-C: porcentaje estimado de humedad del material (0 a 100). */
+    var humedadEstimada: BigDecimal = BigDecimal.ZERO,
     var anulado: Boolean = false,
     var motivoAnulacion: String? = null
 )
