@@ -978,6 +978,255 @@
           ]
         }
       ]
+    },
+    {
+      "name": "5. SC-B Auditor",
+      "item": [
+        {
+          "name": "Login auditor1 (200)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\"usuario\": \"auditor1\", \"contrasena\": \"Eco2026*\"}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('tokAuditor', pm.response.json().token);",
+                  "pm.test('200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Auditor lee la ruta del dia (200)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokAuditor}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/rutas/del-dia",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "rutas",
+                "del-dia"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Auditor lee pesajes (200)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokAuditor}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/puntos/8/pesajes?pagina=0&tamanio=20",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "puntos",
+                "8",
+                "pesajes"
+              ],
+              "query": [
+                {
+                  "key": "pagina",
+                  "value": "0"
+                },
+                {
+                  "key": "tamanio",
+                  "value": "20"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Auditor registra (403)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokAuditor}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/pesajes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pesajes"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\"rutaId\": 2, \"puntoId\": 10, \"material\": \"CARTON\", \"pesoBruto\": 5, \"tara\": 1}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('403', () => pm.response.to.have.status(403));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Auditor anula (403)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokAuditor}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/pesajes/10?motivo=x",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pesajes",
+                "10"
+              ],
+              "query": [
+                {
+                  "key": "motivo",
+                  "value": "x"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('403', () => pm.response.to.have.status(403));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Auditor cierra ruta (403)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokAuditor}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/rutas/2/cierre",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "rutas",
+                "2",
+                "cierre"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('403', () => pm.response.to.have.status(403));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
     }
   ],
   "variable": [
@@ -999,6 +1248,10 @@
     },
     {
       "key": "idPesaje",
+      "value": ""
+    },
+    {
+      "key": "tokAuditor",
       "value": ""
     }
   ]

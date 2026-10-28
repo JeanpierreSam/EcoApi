@@ -25,6 +25,7 @@ Sin Docker para el API (solo la base en Docker): `docker compose up -d db` y lue
 | operario2 | Eco2026* | OPERARIO (autor de un pesaje ajeno, para RN-02) |
 | supervisor1 | Eco2026* | SUPERVISOR |
 | admin | Eco2026* | ADMINISTRADOR |
+| auditor1 | Eco2026* | AUDITOR (SC-B, solo lectura) |
 
 Datos semilla: 12 puntos en 3 zonas (NORTE, CENTRO, SUR); ruta de ayer **CERRADA** (id 1, puntos 1–6) y ruta de hoy
 **ABIERTA** (id 2, puntos 7–12); 15 pesajes (uno anulado, uno de operario2; los puntos 10–12 de hoy sin pesar).
@@ -73,16 +74,21 @@ El cliente nunca envía el peso neto: lo calcula el servicio. Cualquier error no
 La autorización se verifica siempre por **privilegio**. La asignación rol → privilegios vive en la base de datos
 (`rol_privilegio`) y las reglas de cada ruta en `SecurityConfig` (`hasAuthority`). Ningún controlador pregunta por el nombre del rol.
 
-| Privilegio | OPERARIO | SUPERVISOR | ADMINISTRADOR |
-|---|---|---|---|
-| PUNTO_LEER | Sí | Sí | Sí |
-| PESAJE_LEER | Sí | Sí | Sí |
-| PESAJE_CREAR | Sí | Sí | No |
-| PESAJE_EDITAR | Solo los propios (RN-02) | Todos | No |
-| PESAJE_EDITAR_TODOS | No | Sí | No |
-| PESAJE_ANULAR | No | Sí | No |
-| RUTA_CERRAR | No | Sí | No |
-| PUNTO_GESTIONAR | No | No | Sí |
+| Privilegio | OPERARIO | SUPERVISOR | ADMINISTRADOR | AUDITOR |
+|---|---|---|---|---|
+| PUNTO_LEER | Sí | Sí | Sí | Sí |
+| PESAJE_LEER | Sí | Sí | Sí | Sí |
+| RUTA_LEER_TODAS | No | No | Sí | Sí |
+| PESAJE_CREAR | Sí | Sí | No | No |
+| PESAJE_EDITAR | Solo los propios (RN-02) | Todos | No | No |
+| PESAJE_EDITAR_TODOS | No | Sí | No | No |
+| PESAJE_ANULAR | No | Sí | No | No |
+| RUTA_CERRAR | No | Sí | No | No |
+| PUNTO_GESTIONAR | No | No | Sí | No |
+
+**SC-B — rol AUDITOR.** Se incorporó solo con la migración `V3__rol_auditor.sql` (rol, privilegios y usuario `auditor1`).
+`SecurityConfig` y los controladores no cambiaron: ya autorizan por privilegio. `RUTA_LEER_TODAS` es un privilegio de lectura
+nuevo que permite ver la ruta del día sin estar asignado a ella (`RutaService.delDia` pregunta por el privilegio, no por el rol).
 
 `PESAJE_EDITAR_TODOS` expresa la columna «Todos» de la matriz: así `PesajeService` aplica RN-02 sin comparar nombres de rol.
 
