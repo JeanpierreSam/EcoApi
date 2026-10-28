@@ -1,0 +1,1005 @@
+{
+  "info": {
+    "name": "EcoAPI - EcoRecicla",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Autenticacion",
+      "item": [
+        {
+          "name": "Login operario1 (200)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\"usuario\": \"operario1\", \"contrasena\": \"Eco2026*\"}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('tokOperario', pm.response.json().token);",
+                  "pm.test('200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login supervisor1 (200)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\"usuario\": \"supervisor1\", \"contrasena\": \"Eco2026*\"}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('tokSupervisor', pm.response.json().token);",
+                  "pm.test('200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login admin (200)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\"usuario\": \"admin\", \"contrasena\": \"Eco2026*\"}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('tokAdmin', pm.response.json().token);",
+                  "pm.test('200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login credenciales incorrectas (401)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "login"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\"usuario\": \"operario1\", \"contrasena\": \"mala\"}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('401', () => pm.response.to.have.status(401));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Usuario actual (200)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokOperario}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/auth/me",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "me"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Sin token (401)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/rutas/del-dia",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "rutas",
+                "del-dia"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('401', () => pm.response.to.have.status(401));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Token alterado (401)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokOperario}}x"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/rutas/del-dia",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "rutas",
+                "del-dia"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('401', () => pm.response.to.have.status(401));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "2. Consultas",
+      "item": [
+        {
+          "name": "Ruta del dia (200)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokOperario}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/rutas/del-dia",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "rutas",
+                "del-dia"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Admin sin ruta (404)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokAdmin}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/rutas/del-dia",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "rutas",
+                "del-dia"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('404', () => pm.response.to.have.status(404));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Puntos por zona paginado (200)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokOperario}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/puntos?zona=NORTE&pagina=0&tamanio=5",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "puntos"
+              ],
+              "query": [
+                {
+                  "key": "zona",
+                  "value": "NORTE"
+                },
+                {
+                  "key": "pagina",
+                  "value": "0"
+                },
+                {
+                  "key": "tamanio",
+                  "value": "5"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Pesajes de un punto (200)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokOperario}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/puntos/9/pesajes?pagina=0&tamanio=20",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "puntos",
+                "9",
+                "pesajes"
+              ],
+              "query": [
+                {
+                  "key": "pagina",
+                  "value": "0"
+                },
+                {
+                  "key": "tamanio",
+                  "value": "20"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Pesaje inexistente (404)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokOperario}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/pesajes/9999",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pesajes",
+                "9999"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('404', () => pm.response.to.have.status(404));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "3. Pesajes y reglas",
+      "item": [
+        {
+          "name": "Registrar pesaje (201)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokOperario}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/pesajes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pesajes"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\"rutaId\": 2, \"puntoId\": 10, \"material\": \"PLASTICO\", \"pesoBruto\": 40, \"tara\": 3.5, \"observacion\": \"Postman\"}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.collectionVariables.set('idPesaje', pm.response.json().id);",
+                  "pm.test('201', () => pm.response.to.have.status(201));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Validacion de campos (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokOperario}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/pesajes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pesajes"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\"rutaId\": 2, \"puntoId\": 10, \"material\": \"\", \"pesoBruto\": -1}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('400', () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "RN-03 neto <= 0 (400)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokOperario}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/pesajes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pesajes"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\"rutaId\": 2, \"puntoId\": 10, \"material\": \"CARTON\", \"pesoBruto\": 5, \"tara\": 8}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('400', () => pm.response.to.have.status(400));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "RN-01 ruta cerrada (409)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokOperario}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/pesajes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pesajes"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\"rutaId\": 1, \"puntoId\": 1, \"material\": \"CARTON\", \"pesoBruto\": 50, \"tara\": 5}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('409', () => pm.response.to.have.status(409));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Corregir pesaje propio (200)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokOperario}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/pesajes/{{idPesaje}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pesajes",
+                "{{idPesaje}}"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\"material\": \"PLASTICO\", \"pesoBruto\": 42, \"tara\": 3.5, \"observacion\": \"\"}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "RN-02 corregir pesaje ajeno (403)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokOperario}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/pesajes/13",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pesajes",
+                "13"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\"material\": \"VIDRIO\", \"pesoBruto\": 61, \"tara\": 18, \"observacion\": \"\"}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('403', () => pm.response.to.have.status(403));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Operario anula sin privilegio (403)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokOperario}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/pesajes/{{idPesaje}}?motivo=prueba",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pesajes",
+                "{{idPesaje}}"
+              ],
+              "query": [
+                {
+                  "key": "motivo",
+                  "value": "prueba"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('403', () => pm.response.to.have.status(403));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Admin registra sin privilegio (403)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokAdmin}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/pesajes",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pesajes"
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\"rutaId\": 2, \"puntoId\": 10, \"material\": \"CARTON\", \"pesoBruto\": 5, \"tara\": 1}"
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('403', () => pm.response.to.have.status(403));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Supervisor anula (204)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokSupervisor}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/pesajes/{{idPesaje}}?motivo=Error%20de%20digitacion",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pesajes",
+                "{{idPesaje}}"
+              ],
+              "query": [
+                {
+                  "key": "motivo",
+                  "value": "Error%20de%20digitacion"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('204', () => pm.response.to.have.status(204));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Anular de nuevo (409)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokSupervisor}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/pesajes/{{idPesaje}}?motivo=otra",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "pesajes",
+                "{{idPesaje}}"
+              ],
+              "query": [
+                {
+                  "key": "motivo",
+                  "value": "otra"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('409', () => pm.response.to.have.status(409));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "4. Cierre de ruta",
+      "item": [
+        {
+          "name": "Operario cierra sin privilegio (403)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokOperario}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/rutas/2/cierre",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "rutas",
+                "2",
+                "cierre"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('403', () => pm.response.to.have.status(403));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "RN-04 faltan puntos (409)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Bearer {{tokSupervisor}}"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/rutas/2/cierre",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "rutas",
+                "2",
+                "cierre"
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('409', () => pm.response.to.have.status(409));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080/api/v1"
+    },
+    {
+      "key": "tokOperario",
+      "value": ""
+    },
+    {
+      "key": "tokSupervisor",
+      "value": ""
+    },
+    {
+      "key": "tokAdmin",
+      "value": ""
+    },
+    {
+      "key": "idPesaje",
+      "value": ""
+    }
+  ]
+}
