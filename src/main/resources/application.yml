@@ -1,0 +1,24 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: ecoapi
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5433/ecorecicla}
+    username: ${DB_USER:eco}
+    password: ${DB_PASSWORD:eco2026}
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+  flyway:
+    enabled: true
+  jackson:
+    time-zone: America/Lima
+
+app:
+  jwt:
+    # 256 bits en Base64; en produccion se inyecta por variable de entorno
+    secret: ${JWT_SECRET:ZWNvcmVjaWNsYS1jbGF2ZS1kZS1maXJtYS1kZS0yNTYtYml0cy11cGV1LTIwMjY=}
+    expiracion-minutos: 60
