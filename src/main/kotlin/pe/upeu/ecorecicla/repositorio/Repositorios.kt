@@ -18,6 +18,8 @@ interface RutaRepository : JpaRepository<Ruta, Long> {
     /** La ruta del dia es la que el usuario recorre como operario o supervisa. */
     @Query("select r from Ruta r where r.fecha = :fecha and (r.operario.id = :usuarioId or r.supervisor.id = :usuarioId)")
     fun delUsuario(fecha: LocalDate, usuarioId: Long): List<Ruta>
+
+    fun findByFechaOrderById(fecha: LocalDate): List<Ruta>
 }
 
 interface RutaPuntoRepository : JpaRepository<RutaPunto, Long> {

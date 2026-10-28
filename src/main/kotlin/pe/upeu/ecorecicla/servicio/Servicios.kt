@@ -40,7 +40,9 @@ class RutaService(
 ) {
     @Transactional(readOnly = true)
     fun delDia(usuario: UsuarioAutenticado, fecha: LocalDate): RutaResponse {
+        // Sin ruta propia, quien tiene RUTA_LEER_TODAS (auditor, admin) ve la ruta de esa fecha.
         val ruta = rutas.delUsuario(fecha, usuario.id).firstOrNull()
+            ?: rutas.findByFechaOrderById(fecha).firstOrNull().takeIf { usuario.tiene(Privilegios.RUTA_LEER_TODAS) }
             ?: throw RecursoNoEncontradoException("No tiene una ruta asignada para el $fecha")
         return aRespuesta(ruta)
     }

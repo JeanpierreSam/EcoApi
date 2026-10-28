@@ -28,4 +28,6 @@ object Privilegios {
     const val PESAJE_ANULAR = "PESAJE_ANULAR"
     const val RUTA_CERRAR = "RUTA_CERRAR"
     const val PUNTO_GESTIONAR = "PUNTO_GESTIONAR"
+    /** Ver la ruta del dia aunque no se este asignado a ella (AUDITOR, ADMINISTRADOR). */
+    const val RUTA_LEER_TODAS = "RUTA_LEER_TODAS"
 }
